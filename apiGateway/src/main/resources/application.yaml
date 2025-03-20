@@ -1,0 +1,27 @@
+# Give a name to the eureka server
+
+server:
+  port: 8080
+
+  # eureka by default will register itself as a client. So, we need to set it to false.
+  # What's a client server? See other microservices (image, gallery, auth, etc).
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+        routes:
+          - id: service-a
+            uri: http://localhost:8081
+            predicates:
+              - Path=/service-a/** # Cau hinh tren giup API Gateway dieu huong request: /service-a/** -> http://localhost:8081
+          - id: service-b
+            uri: http://localhost:8082
+            predicates:
+              - Path=/service-b/** # /service-b/** -> http://localhost:8082
