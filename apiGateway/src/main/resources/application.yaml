@@ -14,14 +14,41 @@ eureka:
 spring:
   application:
     name: api-gateway
+#  cloud:
+#    gateway:
+#        routes:
+#          - id: service-a
+#            uri: http://localhost:8081
+#            predicates:
+#              - Path=/service-a/** # Cau hinh tren giup API Gateway dieu huong request: /service-a/** -> http://localhost:8081
+#          - id: service-b
+#            uri: http://localhost:8082
+#            predicates:
+#              - Path=/service-b/** # /service-b/** -> http://localhost:8082
+
+# Cach 2 Dùng cho swagger
   cloud:
     gateway:
-        routes:
-          - id: service-a
-            uri: http://localhost:8081
-            predicates:
-              - Path=/service-a/** # Cau hinh tren giup API Gateway dieu huong request: /service-a/** -> http://localhost:8081
-          - id: service-b
-            uri: http://localhost:8082
-            predicates:
-              - Path=/service-b/** # /service-b/** -> http://localhost:8082
+      routes:
+        - id: service-a
+          uri: http://localhost:8081
+          predicates:
+            - Path=/service-a/**
+          filters:
+            - StripPrefix=1
+        - id: service-b
+          uri: http://localhost:8082
+          predicates:
+            - Path=/service-b/**
+          filters:
+            - StripPrefix=1
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: service-a
+        url: /service-a/v3/api-docs
+      - name: service-b
+        url: /service-b/v3/api-docs
